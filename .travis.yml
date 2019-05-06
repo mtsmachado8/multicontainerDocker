@@ -1,0 +1,41 @@
+sudo: required
+services:
+  - docker
+
+  # The developer image, because prod cant do any test
+before_install:
+  - docker build -t mtsmachado8/multicontainer-docker-test -f ./client/Dockerfile.dev ./client/
+  # If more tests do the up line for each one of then
+
+script: # -- --coverage so it doesnt hang
+  - docker run mtsmachado8/multicontainer-docker-test npm run test -- --coverage
+
+after_success:
+  - docker build -t mtsmachado8/multicontainer-client ./client/
+  - docker build -t mtsmachado8/multicontainer-server ./server/
+  - docker build -t mtsmachado8/multicontainer-worker ./worker/
+  - docker build -t mtsmachado8/multicontainer-nginx ./nginx/
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push mtsmachado8/multicontainer-client
+  - docker push mtsmachado8/multicontainer-server
+  - docker push mtsmachado8/multicontainer-worker
+  - docker push mtsmachado8/multicontainer-nginx
+
+deploy:
+  provider: elasticbeanstalk
+  # region is on aws's url. Right before .elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-react"
+  env: "DockerReact-env"
+  # search for bucket_name typing s3(cloud service to deploy) on aws services
+  bucket_name: "elasticbeanstalk-us-east-2-257844553213"
+  # bucket_path is inside s3's bucket. Default defined as app's name
+  bucket_path: "docker-react"
+  # when to trigger the deploy
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: 
+    secure: $AWS_SECRET_KEY
