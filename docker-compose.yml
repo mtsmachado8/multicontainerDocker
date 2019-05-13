@@ -13,7 +13,7 @@ services:
       - ./server:/app
     environment:
       # Varible=value sets it at run time
-      - REDIS_HOST=redis
+      - REDIS_HOST=redis # ElasticCache
       - REDIS_PORT=6379
       - PGUSER=postgres
       - PGHOST=postgres
