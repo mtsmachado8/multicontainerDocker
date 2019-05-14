@@ -1,6 +1,6 @@
 # Temporary container for building phase
 FROM node:alpine as builder
-WORKDIR '/app'
+WORKDIR "/app"
 COPY ./package.json ./
 RUN npm install
 COPY . .
