@@ -28,10 +28,10 @@ deploy:
   # region is on aws's url. Right before .elasticbeanstalk
   region: "us-east-2"
   app: "multi-docker"
-  env: "MultiDocker-env"
+  env: "MultiDocker-env-1"
   # search for bucket_name typing s3(cloud service to deploy) on aws services
   bucket_name: "elasticbeanstalk-us-east-2-257844553213"
-  # bucket_path is inside s3's bucket. Default defined as app's name
+  # bucket_path is inside s3's bucket.Default defined as app's name
   bucket_path: "docker-multi"
   # when to trigger the deploy
   on:
